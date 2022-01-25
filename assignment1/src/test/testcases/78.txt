@@ -1,0 +1,6 @@
+
+        Class Shape {
+                    Var $root,fragment : Int = !True,5.345;
+                    Val pass_woed,$username : Int = 23,453;
+                }
+        

@@ -1,0 +1,9 @@
+Class main  {
+          Val myconst , age : Int = 2 + 3, 3 +3 ;
+          Var $mysdfs : Float = 2.32 +32.23;
+          main()  {
+              val r, s: Int;
+               
+             
+            } 
+        }
