@@ -1,3 +1,0 @@
-Class main  {
-          Val myconst : Int = 2 + 3 ;
-        }
