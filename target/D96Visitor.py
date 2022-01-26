@@ -14,6 +14,11 @@ class D96Visitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by D96Parser#concoac.
+    def visitConcoac(self, ctx:D96Parser.ConcoacContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by D96Parser#classUse.
     def visitClassUse(self, ctx:D96Parser.ClassUseContext):
         return self.visitChildren(ctx)
