@@ -9,7 +9,6 @@ options {
 }
 
 program: classUse  EOF;
-
  
 classUse
     :  CLASS IDENT (SINGCOLON IDENT)*    mainClass 
@@ -32,6 +31,7 @@ var
 val 
     : VAL IDENT (COMMA IDENT)* SINGCOLON (typeNumber|arrayType) (EQUAL calculators)?
     ;
+ 
 calculators
     : calculator (COMMA calculator)*
     ;
@@ -226,7 +226,7 @@ CONSTRUCTOR: 'Constructor' ;
 DESTRUCTOR:  'Destructor' ;
 NEW:         'New' ;
 BY:          'By' ;
-IDENT :[a-zA-Z] [a-zA-Z0-9_]+;
+ 
 
 ADD:   '+';
 SUB:   '-';
@@ -261,7 +261,7 @@ COMMA: ',';
 
 LBR: '[';
 RBR: ']';
-
+IDENT :[a-zA-Z] [a-zA-Z0-9_]*;
 COMMENT: '##' .*? '##' -> skip;
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines;
 

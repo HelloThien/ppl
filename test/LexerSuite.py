@@ -44,5 +44,6 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test( """Array("Kangxi", "Yongzheng", "Qianlong")""", """Array("Kangxi", "Yongzheng", "Qianlong"),<EOF>""", 120))
     
     def test_attribbuteee(self):
-        self.assertTrue(TestLexer.test("val r, s: Int;", "val r, s: Int;,<EOF>", 121))
+        self.assertTrue(TestLexer.test("$Val r ", "val r, s: Int;,<EOF>", 122))
+        self.assertTrue(TestLexer.test("Val r , s : Int;", "val r, s: Int;,<EOF>", 121))
          

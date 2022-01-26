@@ -1,1 +1,1 @@
-val,Error Token r
+Val,r,,,s,:,Int,;,<EOF>
