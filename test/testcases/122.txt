@@ -1,1 +1,1 @@
-$Val r 
+ "This is a string" 

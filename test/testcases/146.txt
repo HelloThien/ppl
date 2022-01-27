@@ -1,0 +1,3 @@
+{ lh = a + b - c * d / e % f;
+str = str.first +. str.second ==. str.third;
+}

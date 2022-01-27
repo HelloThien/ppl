@@ -1,1 +1,1 @@
-Unclosed String: anhn fsdf  
+1,:,10,+,A,-,F,<EOF>

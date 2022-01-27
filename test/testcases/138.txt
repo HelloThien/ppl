@@ -1,0 +1,4 @@
+ Class Shape {
+Val $numOfShape: Int = 0;
+Var length, width: Int;
+} 

@@ -1,0 +1,1 @@
+If (Grade::New(Array[String,a[02]])) 1=2;

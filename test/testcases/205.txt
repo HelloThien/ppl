@@ -1,0 +1,7 @@
+Class main {
+          Val age , num : Int = 2 +3 ,34;
+          Var $name , $age : String = "thien", 23;
+           getArea() {
+             Return Self.length * Self.width;
+          }
+        }

@@ -1,0 +1,3 @@
+ If (a==b) {r = a||b;}
+Elseif (a<b)  {r = a;}
+Else {r = b;}

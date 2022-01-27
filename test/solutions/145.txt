@@ -1,0 +1,1 @@
+thongtin,=,DHBK,[,STT,],.,getInfo,(,),;,ten,=,DHBK,[,STT,],.,name,;,<EOF>

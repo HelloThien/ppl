@@ -1,1 +1,1 @@
-test_case_20,<EOF>
+$abc,$123,$2a,$HCM1,<EOF>

@@ -1,0 +1,4 @@
+Class A:B{
+   Val $a,b: Array[Int,5] = 12;
+}
+C = New A();

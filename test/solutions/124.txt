@@ -1,0 +1,1 @@
+This is a string and \n new line,<EOF>

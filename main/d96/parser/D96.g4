@@ -8,13 +8,13 @@ options {
 	language = Python3;
 }
 
-program: classUse  EOF;
- 
+program: classUse*  EOF;
+
 classUse
-    :  CLASS IDENT (SINGCOLON IDENT)*    mainClass 
+    :  CLASS IDENT (SINGCOLON IDENT)?    bodyclass 
     ;
-mainClass
-    :  LP (attribute|declaration|constructor|destructor)* RP
+bodyclass
+    :  LP (attribute|methodClass|constructor|destructor)* RP
     ;
 constructor
     : CONSTRUCTOR LB listParams RB blockStatement
@@ -48,47 +48,48 @@ math
     : integerType | booleanType | floatType | stringType 
     ;
 arrayType
-    : ARRAYTYPE  LBR typeNumber COMMA  Integer RBR
+    : ARRAYTYPE  LBR typeNumber COMMA  Integer RBR        
     ;
-declaration
-    : IDENT LB listParams? RB   blockStatement 
+methodClass
+    : (IDENT|DOLLAR) LB listParams? RB   blockStatement 
     ;
 listParams
-    :  param (COMMA param)*
+    :  param (SEMI param)*  
     ;
 param 
-    : number
+    : (typeNumber|arrayType) IDENT (COMMA IDENT)* 
     ;
 blockStatement
-    : LP (attribute| statement )*  RP 
+    : LP (attribute| statement|returnself|ifElse|foreach )*  RP 
     ;
-
+calculsingle
+    : (IDENT|arrayIndex) EQUAL calculator
+    ;
 statement
-    :((IDENT|arrayIndex) EQUAL calculator SEMI)
+    :(calculsingle|returnself|attributecall|BREAK|CONTINUE) SEMI
+    ;
+returnself
+    : RETURN calculator
     ;
 foreach 
-    : FOREACH LB IDENT IN Integer DOTDOT Integer (BY Integer)? blockStatement
+    : FOREACH LB IDENT IN Integer DOTDOT Integer (BY Integer)? RB blockStatement
     ;
 ifElse
-    :
+    : if1 elseIf* else1?
     ;
 if1  
-    : IF LB expressions  RB blockStatement
+    : IF LB expressions?  RB blockStatement
     ;
 else1  
     : ELSE blockStatement
     ;
 elseIf
-    : ELSEIF LB expressions RB blockStatement
+    : ELSEIF LB expressions? RB blockStatement
     ; 
-call 
-    :
-    ;
-invocation
-    :
-    ;
+ 
+ 
 number
-    : Float|Integer|String|Boolean
+    : Float|Integer|String|Boolean|attributecall|IDENT
     ;
 arrayIndex
     : ARRAYTYPE LBR (Integer|IDENT) RBR
@@ -115,35 +116,49 @@ stringOperators
     : ADDDOT
     ;
 relationalOperators
-    : DOUAND | NOTEQUAL | GREATER | GREQUAL | LESS | LESEQUAL
+    : (DOUAND | NOTEQUAL | GREATER | GREQUAL | LESS | LESEQUAL)
     ;
 operators
-    : relationalOperators | stringOperators | booleanOperators | arithmeticOperators
+    : (relationalOperators | stringOperators | booleanOperators | arithmeticOperators)
     ;
 expressions
-    : number operators number
+    : number (operators number)*
+    ;
+attributecall
+    :  instanceAttribute|staticAttribute
     ;
 instanceAttribute 
-    : IDENT DOT IDENT
+    : IDENT DOT IDENT ( LB ((number|IDENT) (COMMA (number|IDENT))* )? RB)?
     ;
 staticAttribute
-    : IDENT COLON IDENT
+    : IDENT COLON DOLLAR  ( LB ((number|IDENT) (COMMA (number|IDENT))* )? RB)?
     ;
-Array 
+array 
     : ARRAYTYPE LB (.)*? RB
     ;
 Float
-    :   Poinfloat
-    |   Exponentfloat
-    ; 
- 
-String
-    : DOUBQUOTE ((~["#])+)? DOUBQUOTE  {  self.text = self.text.replace('"','') }
+    : (DecimalConstant FRACTION EXPONENT
+    | FRACTION EXPONENT
+    | DecimalConstant EXPONENT
+    | DecimalConstant FRACTION )  
+    {
+      self.text = self.text.replace('_' ,'')
+    } 
     ;
- 
-     
+fragment
+DOUBQUOTE: '"';
+String
+    : DOUBQUOTE (LEGAL_THIEN)*  DOUBQUOTE  {  
+      self.text = self.text[1:]
+      self.text = self.text[:-1]
+    }
+    ; 
+fragment
+LEGAL_THIEN
+    : ('\\'[bfrnt\\'] | '\'"'| ~[\\"])
+    ;   
 Boolean
-    :   TRUE|FALSE
+    :  'True'|'False'
     ; 
 Integer 
     :   (DecimalConstant 
@@ -159,49 +174,46 @@ Poinfloat
 Exponentfloat
  : ( DecimalConstant | Poinfloat ) EXPONENT
  ;
- 
+
+fragment
 FRACTION
- : DOT Digit+
+ : DOT Digit*
  ;
 
- 
+fragment
 EXPONENT
  : [eE] [+-]? Digit+
  ;
 
  
 BinaryConstant
-	  :	'0' [bB] [0-1]+
+	  :	'0' [bB] '1' [01]*
 	  ;
 HexadecimalConstant
-    :   HexadecimalPrefix HexadecimalDigit+
+    :    '0' [xX] [1-9A-F] [0-9A-F_]*
     ;
-HexadecimalPrefix
-    :   '0' [xX]
-    ;
-HexadecimalDigit
-    :   [0-9a-fA-F]
-    ;
+ 
 OctalConstant
-    :   '0' OctalDigit*
+    :   '0'  [1-7] [0-7_]*
     ;
-OctalDigit
-    :   [0-7]
-    ;
+ 
+fragment
 DecimalConstant
     :   (([1-9] [0-9_]*) |'0')  
     ;
+fragment
 NonzeroDigit
     :   [1-9]
     ;
- 
+fragment 
 Digit
     :   [0-9]
     ;
 
 
-DOLLAR: '$' IDENT ;
-   
+ 
+
+
 
 BREAK:       'Break' ;
 CONTINUE:    'Continue' ;
@@ -209,11 +221,11 @@ IF:          'If' ;
 ELSEIF:      'Elseif' ;
 ELSE:        'Else' ;
 FOREACH:     'Foreach' ;
-TRUE:        'True' ;
-FALSE:       'False' ;
+ 
 ARRAYTYPE:       'Array' ;
-IN:          'In' ;
 INT:         'Int' ;
+IN:          'In' ;
+ 
 FLOATTYPE:       'Float' ;
 BOOLEANTYPE:     'Boolean' ;
 STRINGTYPE:      'String' ;
@@ -226,25 +238,30 @@ CONSTRUCTOR: 'Constructor' ;
 DESTRUCTOR:  'Destructor' ;
 NEW:         'New' ;
 BY:          'By' ;
- 
 
+
+GREQUAL:  '>=';
+LESEQUAL:   '<='; 
+DOUEQUALDOT:   '==.'; 
+ADDDOT:   '+.'; 
 ADD:   '+';
 SUB:   '-';
 MUL:   '*';
 DIV:   '/';
 MOD:  '%'; 
+NOTEQUAL:   '!=';
 NOT:   '!';
 DOUAND:   '&&';
 DOUOR:   '||';
 DOUEQUAL:   '==';
 EQUAL:   '='; 
-NOTEQUAL:   '!=';
+ 
 GREATER:   '>';
-GREQUAL:  '>=';
+ 
 LESS:  '<';
-LESEQUAL:   '<='; 
-DOUEQUALDOT:   '==.';
-ADDDOT:   '+.'; 
+ 
+ 
+ 
 COLON:   '::'; 
 SINGCOLON: ':';
 DOTDOT: '..';
@@ -255,20 +272,25 @@ RB: ')';
 
 LP:   '{';
 RP:  '}';
-DOUBQUOTE: '"';
+
+ 
 SEMI: ';';
 COMMA: ',';
 
 LBR: '[';
 RBR: ']';
-IDENT :[a-zA-Z] [a-zA-Z0-9_]*;
+IDENT :[a-zA-Z_] [a-zA-Z0-9_]*;
+DOLLAR: '$' [a-zA-Z0-9_]+ ;
 COMMENT: '##' .*? '##' -> skip;
 WS: [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines;
 
 ERROR_CHAR: . {raise ErrorToken(self.text)};  
-UNCLOSE_STRING:   DOUBQUOTE ((~["#])+)?  {raise UncloseString(self.text.replace('"',''))};
+
+fragment
+ILL_THIEN : '\\'  ~[bfrnt'\\] ;
  
- 
-ILLEGAL_ESCAPE: '"'(  [bfrnt"\\] | ~[\r\n\\])* '"'  {raise IllegalEscape(self.text)};
- 
+ILLEGAL_ESCAPE: DOUBQUOTE (LEGAL_THIEN)* ILL_THIEN  {raise IllegalEscape(self.text[1:])};
+
+UNCLOSE_STRING:   DOUBQUOTE (LEGAL_THIEN)*  {raise UncloseString(self.text[1:])};
   
+ 

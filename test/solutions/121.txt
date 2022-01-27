@@ -1,1 +1,1 @@
-Val,r,,,s,:,Int,;,<EOF>
+This is a string,<EOF>

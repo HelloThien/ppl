@@ -1,0 +1,1 @@
+Int,Sum,(,a,,,b,,,c,),{,Var,s,:,Int,=,a,+,b,+,c,;,Return,s,;,},<EOF>

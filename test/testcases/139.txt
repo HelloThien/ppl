@@ -1,0 +1,5 @@
+Class Child: Parent{
+      getName() {
+         Return Self.Firstname + Self.Lastname;
+      }
+}

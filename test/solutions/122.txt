@@ -1,1 +1,1 @@
-$Val,r,<EOF>
+This is a string,<EOF>
